@@ -50,3 +50,38 @@ En esta parte ejecutamos de nuevo el codigo y podremos percatarnos que la serie 
 
 5. **¿Esto es cifrado reversible?**
    **No, no es reversible.** Es una función resumen unidireccional (*one-way hash*). No existe forma de desencriptar o recuperar la contraseña original a partir del hash generado; solo se puede verificar volviendo a procesar la clave intentada.
+
+### Almacenamiento seguro de credenciales
+
+Aquí podemos observar la creación de la tabla donde se aplica un hash a la contraseña. Al utilizar la función `crypt()` junto con `gen_salt()`, la contraseña original en texto claro ya no queda expuesta ni visible en la base de datos, almacenándose únicamente el valor hash seguro.   
+
+![Credenciales](../image/credenciales2.png)
+
+### Verificación de contraseña con respuesta booleana
+
+En esta sección se realiza la comprobación de si la contraseña ingresada es correcta o incorrecta, devolviendo como resultado un valor booleano (`true` o `false`).
+
+### verdadero
+
+![Credenciales](../image/credenciales2-2.png)
+
+### falso
+
+![Credenciales](../image/credenciales2-3.png)
+
+### Validación de contraseñas y conceptos de Hashing
+
+1. **¿Qué resultado obtuviste con la contraseña correcta?**
+   Un valor booleano **`true`** (o `t` en PostgreSQL), el cual confirma que la contraseña ingresada coincide exitosamente con el hash almacenado.
+
+2. **¿Qué resultado obtuviste con la contraseña incorrecta?**
+   Un valor booleano **`false`** (o `f` en PostgreSQL), lo que indica que la contraseña ingresada no corresponde a la cuenta.
+
+3. **¿Por qué no es necesario recuperar la contraseña original?**
+   Porque para verificar la identidad del usuario solo hace falta comprobar si la clave que ingresa durante el *login* produce el mismo hash al procesarse con la función `crypt()`. Si los resultados coinciden, se autentica la sesión sin necesidad de almacenar ni conocer la clave en texto claro.
+
+4. **¿Por qué un hash no debe confundirse con cifrado?**
+   * **Cifrado (Encriptación):** Es **bidireccional (reversible)**. Su función es ocultar datos que posteriormente pueden volver a convertirse a su estado original utilizando una clave de descifrado (*key*).
+   * **Hash:** Es **unidireccional (irreversible)**. Transforma los datos en un resumen de longitud fija del cual es matemáticamente imposible recuperar la información original.
+
+
